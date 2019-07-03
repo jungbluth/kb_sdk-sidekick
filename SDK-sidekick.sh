@@ -13,18 +13,19 @@
 # 5 = path to app (if existing)
 # 6 = which editor to use (subl|atom)
 
-your_kbase_username=${1}
-EDITOR=${6}
-#your_kbase_username="seanjungbluth"
+set -eu
 
+your_kbase_username=${1}
 username=$your_kbase_username
 
 module_name=${3}
-#module_name="kb_SPAdes"
+EDITOR=${6}
 
 
 if [ ${2} == "yes" ]; then
+  printf "${blue}"
   printf "\n\n***Step 0) Remove previous instance of ${module_name}, if it exists\n"
+  printf "${reset}"
   if [ -d "$module_name" ]; then
     printf "\n  ***Warning: Previous folder/version of ${module_name} found, removing...\n"
     rm -Rf $module_name
@@ -32,7 +33,9 @@ if [ ${2} == "yes" ]; then
 fi
 
 
+printf "${blue}"
 printf "\n\n***Step 1) Initialize the module - https://kbase.github.io/kb_sdk_docs/tutorial/3_initialize.html\n"
+printf "${reset}"
 if [ ${4} == "no" ]; then
   if $(cp -r ${5}/${module_name} ./); then
     printf "\nSuccess: module copied from: ${5}\n"
@@ -78,8 +81,9 @@ read dummy
 # printf "\n  [Enter] to proceed to Step 2) Build and test docker image\n"
 # read dummy
 
-
+printf "${blue}"
 printf "\n\n***Step 2) Build and test docker image\n"
+printf "${reset}"
 printf "\n  --Procedure: \n"
 printf "\n  A) edit/construct Docker image at ${module_name}/Dockerfile\n"
 printf "\n  ----a) Guide for making Docker images: https://kbase.github.io/kb_sdk_docs/howtos/edit_your_dockerfile.html\n"
@@ -92,15 +96,16 @@ docker build -t ${module_name}:latest ${module_name}/
 printf "\n  C) test Docker image\n"
 printf "\n  When you are done, type <exit> to leave the Docker container\n"
 docker run -it ${module_name}:latest /bin/bash
-printf "\n  D) if the commands work as expected, reset the ENTRYPOINT as needed for KBase Apps\n"
+printf "\n  D) if the commands work as expected, then the next step is to set up the ENTRYPOINT as needed for KBase Apps (performing now)\n"
 sed "s/#ENTRYPOINT/ENTRYPOINT/" ${module_name}/Dockerfile > ${module_name}/Dockerfile.tmp && mv ${module_name}/Dockerfile.tmp ${module_name}/Dockerfile
 docker build -t ${module_name}:latest ${module_name}/
 
 printf "\n  [Enter] to proceed to Step 3) Customize the template files for your App\n"
 read dummy
 
-
+printf "${blue}"
 printf "\n\n***Step 3) Customize the template files for your App\n"
+printf "${reset}"
 printf "\n  --Modify these files - typically developers follow this path: \n"
 printf "\n  3A) ${module_name}/${module_name}.spec\n"
 printf "\n  --Work on the MyModule.spec file. This will autogenerate methods in your MyModuleImpl.py file, which is where the core of your method functionality will reside.\n"
@@ -131,13 +136,15 @@ printf "\n  Opening files in ${EDITOR}\n"
 printf "\n  [Enter] to proceed to Step 4) Share code via Github\n"
 read dummy
 
-
+printf "${blue}"
 printf "\n\n***Step 4) Share code via Github.\n"
+printf "${reset}"
 printf "\n  [Enter] to proceed to Step 5) Set up your developer credentials\n"
 read dummy
 
-
+printf "${blue}"
 printf "\n\n***Step 5) Set up your developer credentials.\n"
+printf "${reset}"
 printf "\n  Go to https://narrative.kbase.us/#auth2/account, click Developer Tokens, and generate a new token.\n"
 echo "https://narrative.kbase.us/#auth2/account" | pbcopy && printf "\n  *Action: KBase website copied to clipboard, paste in web browser*\n"
 printf "\n  Copy Dev token here: "
@@ -148,26 +155,32 @@ printf "auth_service_url=https://kbase.us/services/auth/api/legacy/KBase/Session
 printf "\n  [Enter] to proceed to Step 6) Run kb-sdk test to validate the module\n"
 read dummy
 
-
+printf "${blue}"
 printf "\n\n***Step 6) Run kb-sdk test to validate the module.\n"
+printf "${reset}"
 cd ${module_name} && kb-sdk test
 printf "\n  [Enter] to proceed to Step 7) Adding a custom icon\n"
 read dummy
 
-
+printf "${blue}"
 printf "\n\n***Step 7) Adding a custom icon for one or multiple apps in your modules.\n"
+printf "${reset}"
 printf "\n  A) Feel free to repurpose the icons from existing KBase apps, or make your own. Your icon can be PNG, GIF, or JPEG (the KBase ones are PNG) and should fit in a square 200x200 pixels. To match our existing icons, use these guidelines: \n"
 printf "\n  --200x200px image with 40px rounded edges\n"
 printf "\n  --Font: Futura Condensed Medium, 72pt, white\n"
 printf "\n  --72dpi PNG\n"
-printf "\n"
-printf "\n  Users can make icons using the ImageMagick software suite using the fol"
 printf "\n  B) PDF vector and PNG bitmap versions that we used for our icons are available here: https://github.com/kbase/kb_sdk_docs/tree/master/source/images/app-icons\n"
+printf "\n  C) Alternatively, generate and icon using ImageMagick"
+printf "\n  Run the command: convert -size 200x200 -gravity center -background DarkOliveGreen4 -font Times-Italic -fill white label:"{icon_name}" ${module_name}.png"
+printf "\n  A list of colors is found here: https://imagemagick.org/script/color.php"
+printf "\n  An online tool to round corners is found here: https://pinetools.com/round-corners-image"
+printf "\n"
 printf "\n  [Enter] to proceed to Step 8) Register your module\n"
 read dummy
 
-
+printf "${blue}"
 printf "\n\n***Step 8) Register your module (if not previously registered).\n"
+printf "${reset}"
 printf "  Register your module here: https://appdev.kbase.us/#appcatalog/register\n"
 echo "https://appdev.kbase.us/#appcatalog/register" | pbcopy && printf "\n  *Action: KBase Module Registration website copied to clipboard, paste in web browser*\n"
 read dummy
