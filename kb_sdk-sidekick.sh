@@ -184,3 +184,5 @@ printf "${reset}"
 printf "  Register your module here: https://appdev.kbase.us/#appcatalog/register\n"
 echo "https://appdev.kbase.us/#appcatalog/register" | pbcopy && printf "\n  *Action: KBase Module Registration website copied to clipboard, paste in web browser*\n"
 read dummy
+
+
