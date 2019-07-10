@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# /Applications/ResearchSoftware/kb_sdk-sidekick/kb_sdk-sidekick.sh seanjungbluth yes kb_concoct yes /Applications/ResearchSoftware/kb_concoct atom
+
 # start in a working directory that docker operates on (e.g. ~/Desktop)
 
 ## input command
